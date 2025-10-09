@@ -37,15 +37,15 @@ namespace MusicStoeCh6
             app.UseAuthorization();
 
             app.MapControllerRoute(
-                            name: "sort_album",
-                            // can sort by either artist or genre
-                            //id = 0 not sorted, id = 1 sorted ascending, id=2 sorted descending
-                            pattern: "{controller=Home}/{action=Index}/{ArtistSort?}/{GenreSort?}");
+                name: "sort_album",
+                // can sort by either artist or genre
+                //id = 0 not sorted, id = 1 sorted ascending, id=2 sorted descending
+                pattern: "{controller=Album}/{action=Index}/{ArtistSort?}/{GenreSort?}");
 
             app.MapControllerRoute(
                 name: "sort_artist", 
                 //id = 0 not sorted, id = 1 sorted ascending, id=2 sorted descending
-                pattern: "{controller=Home}/{action=Index}/{ArtistSort?}");
+                pattern: "{controller=Artist}/{action=Index}/{ArtistSort?}");
 
             app.MapControllerRoute(
                 name: "default",
