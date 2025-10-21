@@ -22,37 +22,21 @@ namespace MusicStore.Controllers
         // GET: Album
         public async Task<IActionResult> Index(int ArtistSort = 0, int GenreSort = 0)
         {
-            // 0 = unsorted, 1 = ascending, 2 = descending
-            // Added statements for every combination of sorting for Artist and Genre
-            if (ArtistSort == 1 && GenreSort == 0)
-                return View(_context.Albums.Include(a => a.Artist).OrderBy(a => a.Artist).Include(a => a.Genre).ToList());
+            var musicContext = await _context.Albums
+                .Include(a => a.Artist)
+                .Include(a => a.Genre)
+                .ToListAsync();
 
-            else if (ArtistSort == 1 && GenreSort == 1)
-                return View(_context.Albums.Include(a => a.Artist).OrderBy(a => a.Artist).Include(a => a.Genre).OrderBy(g => g.Genre.Name).ToList());
+            if (ArtistSort == 1)
+                musicContext = musicContext.OrderBy(a => a.Artist.Name).ToList();
+            else if (ArtistSort == 2)
+                musicContext = musicContext.OrderByDescending(a => a.Artist.Name).ToList();
+            if (GenreSort == 1)
+                musicContext = musicContext.OrderBy(g => g.Genre.Name).ToList();
+            else if (GenreSort == 2)
+                musicContext = musicContext.OrderByDescending(g => g.Genre.Name).ToList();
 
-            else if (ArtistSort == 1 && GenreSort == 2)
-                return View(_context.Albums.Include(a => a.Artist).OrderBy(a => a.Artist).Include(a => a.Genre).OrderByDescending(g => g.Genre.Name).ToList());
-
-            else if (ArtistSort == 2 && GenreSort == 0)
-                return View(_context.Albums.Include(a => a.Artist).OrderByDescending(a => a.Artist).Include(a => a.Genre).ToList());
-
-            else if (ArtistSort == 2 && GenreSort == 1)
-                return View(_context.Albums.Include(a => a.Artist).OrderByDescending(a => a.Artist).Include(a => a.Genre).OrderBy(g => g.Genre.Name).ToList());
-
-            else if (ArtistSort == 2 && GenreSort == 2)
-                return View(_context.Albums.Include(a => a.Artist).OrderByDescending(a => a.Artist).Include(a => a.Genre).OrderByDescending(g => g.Genre.Name).ToList());
-
-            else if (ArtistSort == 0 && GenreSort == 1)
-                return View(_context.Albums.Include(a => a.Artist).Include(a => a.Genre).OrderBy(g => g.Genre.Name).ToList());
-
-            else if (ArtistSort == 0 && GenreSort == 2)
-                return View(_context.Albums.Include(a => a.Artist).Include(a => a.Genre).OrderByDescending(g => g.Genre.Name).ToList());
-
-            else
-            {
-                var musicContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre);
-                return View(await musicContext.ToListAsync());
-            }
+            return View(musicContext);
         }
 
         // GET: Album/Details/5
